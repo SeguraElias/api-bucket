@@ -43,4 +43,42 @@ class imageController {
             ];
         }
     }
+
+    public function getImage($imageName) {
+        try {
+            if (empty($imageName)) {
+                throw new Exception("El nombre de la imagen no puede estar vacío");
+            }
+
+            $exists = $this->s3Client->doesObjectExist($_ENV['AWS_BUCKET_NAME'], $imageName);
+            
+            if (!$exists) {
+                throw new Exception("La imagen no existe en el bucket");
+            }
+
+            $cmd = $this->s3Client->getCommand('GetObject', [
+                'Bucket' => $_ENV['AWS_BUCKET_NAME'],
+                'Key'    => $imageName
+            ]);
+
+            $request = $this->s3Client->createPresignedRequest($cmd, '+5 minutes');
+            $presignedUrl = (string)$request->getUri();
+
+            return [
+                'success' => true,
+                'url' => $presignedUrl,
+                'name' => $imageName,
+                'info' => [
+                    'bucket' => $_ENV['AWS_BUCKET_NAME'],
+                    'expires' => time() + 3600 
+                ]
+            ];
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'error' => $e->getMessage(),
+                'details' => method_exists($e, 'getAwsErrorCode') ? $e->getAwsErrorCode() : null
+            ];
+        }
+    }
 }
