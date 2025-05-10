@@ -10,7 +10,7 @@ permissions:
 jobs:
   build:
     name: "build and test"
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
     - name: "Checkout code"
