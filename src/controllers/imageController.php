@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../config/s3config.php';
+require_once __DIR__ . '../config/s3config.php';
 
 class imageController {
     private $s3Client;
