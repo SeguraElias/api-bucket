@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . './src/config/s3config.php';
-require_once __DIR__ . './src/controllers/imageController.php';
+require_once __DIR__ . '/src/config/s3config.php';
+require_once __DIR__ . '/src/controllers/imageController.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     http_response_code(200);
