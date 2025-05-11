@@ -2,16 +2,9 @@
 require_once __DIR__ . '/src/config/s3config.php';
 require_once __DIR__ . '/src/controllers/imageController.php';
 
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
-header("Access-Control-Expose-Headers: Content-Type, Content-Length");
-header("Content-Type: application/json");
-
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-    header('Access-Control-Allow-Methods: GET, OPTIONS');
-    header('Access-Control-Allow-Headers: Content-Type');
-    exit(0);
+    http_response_code(200);
+    exit();
 }
 
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -24,7 +17,7 @@ $endpoint = str_replace($basePath, '', $requestUri);
 $endpoint = rtrim($endpoint, '/');
 
 if ($requestMethod == 'POST' && strpos($requestUri, '/upload') !== false) {
-    echo json_encode(value: $imageController->uploadImage());
+    echo json_encode($imageController->uploadImage());
     exit;
 } 
 elseif ($requestMethod == 'GET' && strpos($endpoint, '/get') !== false) {
