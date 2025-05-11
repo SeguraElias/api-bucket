@@ -12,11 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     exit(0);
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-    http_response_code(200);
-    exit();
-}
-
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 
@@ -27,7 +22,7 @@ $endpoint = str_replace($basePath, '', $requestUri);
 $endpoint = rtrim($endpoint, '/');
 
 if ($requestMethod == 'POST' && strpos($requestUri, '/upload') !== false) {
-    echo json_encode($imageController->uploadImage());
+    echo json_encode(value: $imageController->uploadImage());
     exit;
 } 
 elseif ($requestMethod == 'GET' && strpos($endpoint, '/get') !== false) {
