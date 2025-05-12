@@ -1,7 +1,5 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-
-    # Redirigir todo a index.php excepto archivos y carpetas reales
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^ index.php [QSA,L]
@@ -13,7 +11,6 @@
     Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
 </IfModule>
 
-# Manejar solicitudes OPTIONS directamente
 <IfModule mod_rewrite.c>
     RewriteCond %{REQUEST_METHOD} OPTIONS
     RewriteRule ^.*$ - [R=204,L]
