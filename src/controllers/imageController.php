@@ -31,23 +31,22 @@ class imageController {
                 'ContentType' => $file['type']
             ]);
 
-            $exists = $this->s3Client->doesObjectExist($_ENV['AWS_BUCKET_NAME'], $filename);
-            
-            if (!$exists) {
-                throw new Exception("La imagen no existe en el bucket");
-            }
-
+            if ($_ENV['AWS_BUCKET_VISIBILITY'] === 'private') {
             $cmd = $this->s3Client->getCommand('GetObject', [
                 'Bucket' => $_ENV['AWS_BUCKET_NAME'],
-                'Key'    => $filename
+                'Key' => $filename
             ]);
 
-            $request = $this->s3Client->createPresignedRequest($cmd, '+1 hora');
-            $presignedUrl = (string)$request->getUri();
+            $request = $this->s3Client->createPresignedRequest($cmd, '+1 hour');
+            $imageUrl = (string)$request->getUri();
+            } else {
+                // Para buckets públicos
+                $imageUrl = $result->get('ObjectURL');
+            }
     
             return [
                 'success' => true,
-                'url' => $presignedUrl,
+                'url' => $imageUrl,
                 'fileName' => $filename
             ];
         } catch (Exception $e) {
